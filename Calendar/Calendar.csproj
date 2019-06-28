@@ -61,8 +61,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="class\Cash.cs" />
     <Compile Include="class\Connection.cs" />
     <Compile Include="config\Config.cs" />
+    <Compile Include="elements\Day.cs" />
+    <Compile Include="elements\Lesson.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

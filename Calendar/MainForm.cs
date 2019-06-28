@@ -14,12 +14,15 @@ namespace Calendar
     public partial class Calendar : Form
     {
         Connection connection;
+        Cash cash;
 
         public Calendar()
         {
             InitializeComponent();
             Config config = new Config();
             connection = new Connection(config.connect);
+            cash = new Cash(connection.sqlConnection);
+
         }
 
         private void Close_db(object sender, FormClosingEventArgs e)
