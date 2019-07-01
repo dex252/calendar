@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Calendar.elements
 {
-    internal class Day//особь
+    class Day//хромосома
     {
         private int lessons;//количество занятий в этот день
         private int window;//количество окон в этот день
@@ -21,6 +21,7 @@ namespace Calendar.elements
         public bool[] matrix = { false, false, false, false, false, false };//расписание занятий в этот день, false - окно/нет занятий, true - занятие стоит
         public Lesson[] matrixL = new Lesson[6];//статичный массив, в котором хранится подробная информация о парах в этот день (хромосомы)
         public double mark = 0.0;//текущая оценка дня (оценка особи текущей популяции)
+       
     }
 
 

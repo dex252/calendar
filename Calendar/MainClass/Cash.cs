@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace Calendar
 {
 
-    internal class Cash
+    class Cash
     {
-        
+
         private SqlConnection sqlConnection;
         private List<UnicLesson> unicLessons; //уникальные уроки, т.е. соответствие преподаватель-предмет
         private int maxDay;//общее число дней в семестре
@@ -21,18 +21,19 @@ namespace Calendar
         private Stack<Lesson> lessons;//стек, в котором хранятся все пары для распределения в days
         private List<string> area;//номера кабинетов
         private string[] timers = { "", "", "", "", "", "" };//расписание звонков
-        private Day[] days; //дни - популяция
-        int maxStack;//общее число предметов на неделе
+        private Day[] days; //дни - особь
+        private int maxStack;//общее число предметов на неделе
+        private Generator generator;//здесь проводятся скрещивания и мутации, выводятся итоговые поколения
 
         public FormWriter render;//отображение на форме
-        public List<Generations> generations; //здесь хранятся все поколения
+        public List<Generations> generations; //здесь хранятся все итоговые поколения (ВАЖНЕЙШИЙ)
 
         public Cash(SqlConnection sqlConnection, Calendar main)
         {
             this.sqlConnection = sqlConnection;
             render = new FormWriter(main, this);
 
-          
+
             unicLessons = new List<UnicLesson>();
             area = new List<string>();
             lessons = new Stack<Lesson>();
@@ -47,8 +48,11 @@ namespace Calendar
             StackStart();//заполнение стека парами из расчета их количества в unicLessons
             FirstPopulation();//формирование начальной популяции
 
-            render.GetList(generations);//заполнение листа поколениями
+            generator.GetPopulations(10000);//выведение новых поколений, аргумент - число популяций
+
             render.Timers(timers, group);//отрисовка времени проведения занятий и номера группы
+            render.GetList(generations);//заполнение листа поколениями
+
         }
 
         private void FirstPopulation()
@@ -107,15 +111,19 @@ namespace Calendar
                 days[curDay].matrixL[index2] = freeLesson;
             }
 
-            //проводим оценку начальной популяции по хромосомам
-            Rating ratio = new Rating(days, maxStack);
+            //проводим оценку начальной особи по хромосомам
+            Rating ratio = new Rating(days, maxStack, unicLessons);
 
             //заносим начальную популяцию в generations
             Generations generic = new Generations("популяция #0");
-            generic.mark = ratio.TotalMark();//считаем общую оценку популяции
+            generic.mark = ratio.TotalMark();//считаем общую оценку особи
             generic.Input(days);
             generations.Add(generic);
+            double firstmark = generic.mark;
             generic = null;
+            generator = new Generator(days, maxStack, unicLessons, generations, firstmark);//вносим первую основную особь в генератор
+
+           
 
         }
 

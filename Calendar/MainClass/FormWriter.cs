@@ -7,7 +7,7 @@ using Calendar.elements;
 
 namespace Calendar
 {
-    internal class FormWriter
+    class FormWriter
     {
         private Calendar main;
         private Cash cash;
@@ -21,10 +21,12 @@ namespace Calendar
         //отрисовка поколений
         public void GetPopulation(int index)
         {
+        
             if (index >=0)
             {
+                
                 Generations cur = cash.generations[index];
-                //оценки
+                    //оценки
                 main.mark.Text = cur.mark.ToString();
                 main.mark0.Text = cur.days[0].mark.ToString();
                 main.mark1.Text = cur.days[1].mark.ToString();
