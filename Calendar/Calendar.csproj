@@ -61,10 +61,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="class\Cash.cs" />
-    <Compile Include="class\Connection.cs" />
+    <Compile Include="MainClass\Cash.cs" />
+    <Compile Include="MainClass\Connection.cs" />
+    <Compile Include="MainClass\FormWriter.cs" />
+    <Compile Include="MainClass\Rating.cs" />
     <Compile Include="config\Config.cs" />
     <Compile Include="elements\Day.cs" />
+    <Compile Include="elements\MinDay.cs" />
     <Compile Include="elements\UnicLesson.cs" />
     <Compile Include="elements\Lesson.cs" />
     <Compile Include="elements\Generations.cs" />

@@ -21,7 +21,7 @@ namespace Calendar
             InitializeComponent();
             Config config = new Config();
             connection = new Connection(config.connect);
-            cash = new Cash(connection.sqlConnection);
+            cash = new Cash(connection.sqlConnection, this);
 
         }
 
@@ -31,6 +31,12 @@ namespace Calendar
             {
                 connection.sqlConnection.Close();
             }
+        }
+
+        private void SelectPopulation(object sender, EventArgs e)
+        {
+            int currentMyComboBoxIndex = generationsBox.SelectedIndex;
+            cash.render.GetPopulation(currentMyComboBoxIndex);
         }
     }
 }

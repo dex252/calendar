@@ -8,14 +8,24 @@ namespace Calendar.elements
 {
     class Generations
     {
-        string name; //имя поколения
-        List<Day> days; //популяция
+        public string name; //имя поколения
+        public MinDay[] days; //популяция
+        public double mark = 0.0;//итговая оценка популяции
 
-        public Generations(string name, List<Day> days)
+        public Generations(string name)
         {
-            this.days = new List<Day>();
-            this.days = days;
+            days = new MinDay[6];
             this.name = name;
+        }
+
+        public void Input(Day[] days)
+        {
+
+            for (int i = 0; i < 6; i++)
+            {
+                this.days[i] = new MinDay(days[i]);
+            }
+
         }
 
         public string GetName()
@@ -23,7 +33,7 @@ namespace Calendar.elements
             return name;
         }
 
-        public List<Day> GetGeneration()
+        public MinDay[] GetGeneration()
         {
             return days;
         }
