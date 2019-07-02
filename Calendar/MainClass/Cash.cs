@@ -11,9 +11,6 @@ namespace Calendar
 
     class Cash
     {
-
-        private SqlConnection sqlConnection;
-        private List<UnicLesson> unicLessons; //уникальные уроки, т.е. соответствие преподаватель-предмет
         private int maxDay;//общее число дней в семестре
         private string[] Week = { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота" };
         private Random rand = new Random();
@@ -21,18 +18,21 @@ namespace Calendar
         private Stack<Lesson> lessons;//стек, в котором хранятся все пары для распределения в days
         private List<string> area;//номера кабинетов
         private string[] timers = { "", "", "", "", "", "" };//расписание звонков
-        private Day[] days; //дни - особь
-        private int maxStack;//общее число предметов на неделе
-        private Generator generator;//здесь проводятся скрещивания и мутации, выводятся итоговые поколения
+        //private Generator generator;//здесь проводятся скрещивания и мутации, выводятся итоговые поколения
+        private Generator generator;
 
+        public int maxStack;//общее число предметов на неделе
+        public SqlConnection sqlConnection;
+        public List<UnicLesson> unicLessons; //уникальные уроки, т.е. соответствие преподаватель-предмет
+        public double firstmark;
+        public Day[] days; //дни - особь
         public FormWriter render;//отображение на форме
         public List<Generations> generations; //здесь хранятся все итоговые поколения (ВАЖНЕЙШИЙ)
 
-        public Cash(SqlConnection sqlConnection, Calendar main)
+        public Cash(SqlConnection sqlConnection, Calendar main, Config config)
         {
             this.sqlConnection = sqlConnection;
             render = new FormWriter(main, this);
-
 
             unicLessons = new List<UnicLesson>();
             area = new List<string>();
@@ -47,8 +47,10 @@ namespace Calendar
             DaysStart();//заполнение дней именами недели
             StackStart();//заполнение стека парами из расчета их количества в unicLessons
             FirstPopulation();//формирование начальной популяции
+            generator = new Generator(this);
 
-            generator.GetPopulations(10000);//выведение новых поколений, аргумент - число популяций
+            //generator.GetPopulations(1000);//выведение новых поколений, аргумент - число популяций
+            generator.GetPopulations(config.numGenerations);
 
             render.Timers(timers, group);//отрисовка времени проведения занятий и номера группы
             render.GetList(generations);//заполнение листа поколениями
@@ -116,12 +118,13 @@ namespace Calendar
 
             //заносим начальную популяцию в generations
             Generations generic = new Generations("популяция #0");
+            
             generic.mark = ratio.TotalMark();//считаем общую оценку особи
             generic.Input(days);
-            generations.Add(generic);
-            double firstmark = generic.mark;
+            generations.Add(new Generations(generic));
+            firstmark = generic.mark;
             generic = null;
-            generator = new Generator(days, maxStack, unicLessons, generations, firstmark);//вносим первую основную особь в генератор
+            //generator = new Generator(days, maxStack, unicLessons, generations, firstmark);//вносим первую основную особь в генератор
 
            
 

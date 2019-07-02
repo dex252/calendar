@@ -64,6 +64,7 @@
     <Compile Include="MainClass\Cash.cs" />
     <Compile Include="MainClass\Connection.cs" />
     <Compile Include="MainClass\FormWriter.cs" />
+    <Compile Include="MainClass\GeneratorOld.cs" />
     <Compile Include="MainClass\Generator.cs" />
     <Compile Include="MainClass\Rating.cs" />
     <Compile Include="config\Config.cs" />

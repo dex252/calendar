@@ -9,25 +9,35 @@ namespace Calendar
 {
     class Rating
     {
-        private Day[] days;
+        private Day[] days = new Day[6];
         private int maxLessons;
         private List<UnicLesson> unicLessons;
 
         public Rating(Day[] days, int maxLessons, List<UnicLesson> unicLessons)
         {
-            this.days = days;
+            for (int i = 0; i < 6; i++)
+            {
+                this.days[i] = new Day(days[i]);
+            }
             this.maxLessons = maxLessons;
             this.unicLessons = unicLessons;
 
             //оценка c понедельника по субботу, где this.mark - это оценка одного дня
             for (int i = 0; i < 6; i++)
             {
-                days[i].mark = NextDay(days[i]);
+                this.days[i].mark = NextDay(days[i]);
             }
 
             //days = InputMarks();
             //итоговая оценка
 
+        }
+
+        public  double GetXromMarks(int index)
+        {
+            double mark = days[index].mark;
+
+            return mark;
         }
 
         //Метод для расчета оценки одного дня, строится на основе штрафов за каждый критерий исследования генов в хромосоме

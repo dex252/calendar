@@ -8,9 +8,22 @@ namespace Calendar.elements
 {
     class Lesson
     {
-        public string teacher = "";
-        public string lesson = "";
-        public string area = "";//номер кабинета
+        public string teacher;
+        public string lesson;
+        public string area;//номер кабинета
 
+        public Lesson()
+        {
+            teacher = "";
+            lesson = "";
+            area = "";
+        }
+
+        public Lesson(Lesson previousPerson)
+        {
+            teacher = previousPerson.teacher;
+            lesson = previousPerson.lesson;
+            area = previousPerson.area;
+        }
     }
 }

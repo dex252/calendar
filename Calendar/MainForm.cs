@@ -21,7 +21,7 @@ namespace Calendar
             InitializeComponent();
             Config config = new Config();
             connection = new Connection(config.connect);
-            cash = new Cash(connection.sqlConnection, this);
+            cash = new Cash(connection.sqlConnection, this, config);
 
         }
 
