@@ -19,8 +19,15 @@ namespace Calendar
             this.main = main;
         }
 
-        public void GetPopulations(int NumGenerations)
+        public void GetPopulations(int NumGenerations, int stop)
         {
+            bool block = false;//блокировка ограничений на количество итераций, по умолчанию блок выключен
+            int count = 0;
+            if (stop > 0)
+            {
+                block = true;
+                count = 0;//счетчик
+            }
             //---------объявления-------------
             Day[] mainPerson = new Day[6]; // основная особь, в начале необходимо скопировать в неё экземпляр из первого поколения
             double mainMark;// оценка основной особи, с которой происходит сравнение при отборе
@@ -34,8 +41,6 @@ namespace Calendar
             mainMark = main.firstmark;
             unicLessons = main.unicLessons;
             generations = main.generations;
-
-
 
             //вырастим numPopulations поколений
             for (int j = 0; j < NumGenerations; j++)
@@ -75,9 +80,12 @@ namespace Calendar
                     }
                 }
 
+
+
                 if (index != -1)//если родительская особь лучше своих поколений, то все поколение бракуется | иначе назначается новая особь, а результат добавляется в список поколений
                 {
 
+                    if (block) count = 0;//обнуление счетчика
                     for (int i = 0; i < 6; i++)
                     {
                         mainPerson[i] = new Day(population[index][i]);
@@ -86,9 +94,15 @@ namespace Calendar
                     Generations generic = new Generations(names[index]);
                     generic.mark = mainMark;
                     generic.Input(mainPerson);
-                   
+
                     generations.Add(new Generations(generic));//добавляем новую особь в список
 
+                }
+
+                if (block)
+                {
+                    count++;
+                    if (count == stop) j = NumGenerations;//если в течение <stop> не было улучшений, то выходим из цикла
                 }
             }
 
@@ -212,7 +226,7 @@ namespace Calendar
 
                 Lesson remember = new Lesson(left.matrixL[gen1]);//запоминаем ген из первой хромосомы
                 bool remember_n = left.matrix[gen1];//запоминаем инфо о первом гене первой хромосомы
-                
+
                 left.matrixL[gen1] = new Lesson(right.matrixL[gen2]);//обмен геном и информацией
                 left.matrix[gen1] = right.matrix[gen2];
 
@@ -229,7 +243,7 @@ namespace Calendar
 
             person[leftIndex] = new Day(left);
             person[rightIndex] = new Day(right);
-           
+
             return person;
         }
 

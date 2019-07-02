@@ -49,7 +49,7 @@ namespace Calendar
             FirstPopulation();//формирование начальной популяции
             generator = new Generator(this);
 
-            generator.GetPopulations(config.numGenerations);
+            generator.GetPopulations(config.numGenerations, config.stop);
         
             render.Timers(timers, group);//отрисовка времени проведения занятий и номера группы
             render.GetList(generations);//заполнение листа поколениями
