@@ -48,6 +48,10 @@ namespace Calendar
                 for (int i = 0; i < 15; i++)
                 {
                     Day[] person = new Day[6];
+                    for (int k = 0; k < 6; k++)
+                    {
+                        person[k] = new Day();
+                    }
 
                     person = GetNewGeneration(mainPerson, i);
 
@@ -55,11 +59,7 @@ namespace Calendar
 
                     names[i] = "популяция #" + (j + 1) + "  особь под номером #" + ((j * 15) + (i + 1));
                     marks[i] = ratio.TotalMark();//считаем общую оценку особи
-
-                    for (int k = 0; k < 6; k++)
-                    {
-                        person[k].mark = ratio.GetXromMarks(k);
-                    }
+                    person = ratio.InputMarksAndDays();
 
                     population.Add(person);
                 }
@@ -84,13 +84,8 @@ namespace Calendar
                     }
 
                     Generations generic = new Generations(names[index]);
-                    generic.mark = mainMark; ;
+                    generic.mark = mainMark;
                     generic.Input(mainPerson);
-
-                    for (int i = 0; i < 6; i++)
-                    {
-                        generic.days[i].mark = population[index][i].mark;
-                    }
                    
                     generations.Add(new Generations(generic));//добавляем новую особь в список
 
@@ -201,7 +196,7 @@ namespace Calendar
 
             return person;
         }
-
+        //ошибка при обмене генами
         private Day[] Swap(Day[] day, int leftIndex, int rightIndex)//меняем местами гены у указанных дней
         {
             Day[] person = new Day[6];
@@ -217,7 +212,7 @@ namespace Calendar
 
                 Lesson remember = new Lesson(left.matrixL[gen1]);//запоминаем ген из первой хромосомы
                 bool remember_n = left.matrix[gen1];//запоминаем инфо о первом гене первой хромосомы
-
+                
                 left.matrixL[gen1] = new Lesson(right.matrixL[gen2]);//обмен геном и информацией
                 left.matrix[gen1] = right.matrix[gen2];
 
@@ -227,13 +222,14 @@ namespace Calendar
 
             //после обмена генами перезаписываем информацию в исходную особь
 
-            day[leftIndex] = new Day(left);
-            day[rightIndex] = new Day(right);
-
             for (int i = 0; i < 6; i++)
             {
                 person[i] = new Day(day[i]);
             }
+
+            person[leftIndex] = new Day(left);
+            person[rightIndex] = new Day(right);
+           
             return person;
         }
 

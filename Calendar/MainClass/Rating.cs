@@ -18,6 +18,7 @@ namespace Calendar
             for (int i = 0; i < 6; i++)
             {
                 this.days[i] = new Day(days[i]);
+                this.days[i].mark = 0.0;
             }
             this.maxLessons = maxLessons;
             this.unicLessons = unicLessons;
@@ -28,12 +29,11 @@ namespace Calendar
                 this.days[i].mark = NextDay(days[i]);
             }
 
-            //days = InputMarks();
             //итоговая оценка
 
         }
 
-        public  double GetXromMarks(int index)
+        public double GetXromMarks(int index)
         {
             double mark = days[index].mark;
 
@@ -46,11 +46,11 @@ namespace Calendar
             double totalMarkDay = 0.0;//общая оценка отдного дня по всем критериям
 
             //оценка общего числа пар
-            totalMarkDay += MaxLessonsMark(day);//штрафы за количество пар
-            totalMarkDay += WindowMarks(day);//штрафы за наличие окон между парами
-            totalMarkDay += SameMarks(day);//штрафы за однообразие пар
-            totalMarkDay += SameTeachersMarks(day);//штрафы за сверхурочные работы преподавателей в эти дни
-            totalMarkDay += FizkultPrivatMarks(day);//давайте поставим физкультуру последней парой
+            totalMarkDay += MaxLessonsMark(day);//штрафы за количество пар +
+            totalMarkDay += WindowMarks(day);//штрафы за наличие окон между парами +
+            totalMarkDay += SameMarks(day);//штрафы за однообразие пар, одинаковые пары не должны стоять отдельно друг от друга +
+            totalMarkDay += SameTeachersMarks(day);//штрафы за сверхурочные работы преподавателей в эти дни +
+            totalMarkDay += FizkultPrivatMarks(day);//давайте поставим физкультуру последней парой + (не проверенно на одном тесте)
             totalMarkDay += CountLessonMarks(day);//штрафы за неравномерную распределнность предметов в расписании
 
             return totalMarkDay;
@@ -75,17 +75,17 @@ namespace Calendar
                 if (day.name == "Суббота")
                 {
                     if (count == 0) mark += 0.0;// лучше освободить субботу при низкой нагрузке
-                    if (count > 0 && count <= 3) mark += ((500.0 / (double)maxLessons) * 10.0);//зачем эти 1 или 2 или 3 пары из 18 ? в этом нет смысла
-                    if (count == 4) mark += ((700.0 / (double)maxLessons) * 10.0);
-                    if (count == 5) mark += ((800.0 / (double)maxLessons) * 10.0);
-                    if (count == 6) mark += ((900.0 / (double)maxLessons) * 10.0);
+                    if (count > 0 && count <= 3) mark += ((500.0 / (double)maxLessons) * 1000.0);
+                    if (count == 4) mark += ((700.0 / (double)maxLessons) * 10000.0);
+                    if (count == 5) mark += ((800.0 / (double)maxLessons) * 10000.0);
+                    if (count == 6) mark += ((900.0 / (double)maxLessons) * 10000.0);
                 }
                 else
                 {
                     if (count <= 3) mark += 0.0;//при столь малом числе предметов на неделе - 3 оптимальный результат
-                    if (count == 4) mark += ((100.0 / (double)maxLessons) * 10.0);//чем меньше общее число пар, тем хуже(выше) оценка при 18 оценка: 55,5
-                    if (count == 5) mark += ((200.0 / (double)maxLessons) * 10.0);//111,1
-                    if (count == 6) mark += ((500.0 / (double)maxLessons) * 10.0);//277,7
+                    if (count == 4) mark += ((100.0 / (double)maxLessons) * 100.0);
+                    if (count == 5) mark += ((200.0 / (double)maxLessons) * 100.0);
+                    if (count == 6) mark += ((500.0 / (double)maxLessons) * 100.0);
                 }
 
 
@@ -96,18 +96,18 @@ namespace Calendar
                 if (day.name == "Суббота")
                 {
                     if (count == 0) mark += 0.0;// лучше освободить субботу при средней нагрузке
-                    if (count > 0 && count <= 2) mark += ((700.0 / (double)maxLessons) * 10.0);//зачем эти 1 или 2  пары ? в этом нет смысла
-                    if (count == 3) mark += ((100.0 / (double)maxLessons) * 10.0);
-                    if (count == 4) mark += ((250.0 / (double)maxLessons) * 10.0);
-                    if (count == 5) mark += ((550.0 / (double)maxLessons) * 10.0);
-                    if (count == 6) mark += ((800.0 / (double)maxLessons) * 10.0);
+                    if (count > 0 && count <= 2) mark += ((700.0 / (double)maxLessons) * 300.0);
+                    if (count == 3) mark += ((100.0 / (double)maxLessons) * 3000.0);
+                    if (count == 4) mark += ((250.0 / (double)maxLessons) * 3000.0);
+                    if (count == 5) mark += ((550.0 / (double)maxLessons) * 3000.0);
+                    if (count == 6) mark += ((800.0 / (double)maxLessons) * 3000.0);
 
                 }
                 else
                 {
                     if (count <= 4) mark += 0.0;//при среднем числе предметов на неделе - 4 оптимальный результат
-                    if (count == 5) mark += ((150.0 / (double)maxLessons) * 10.0); //градация оценки при 19 = 78,9 | 20 =  75 |  21 =  71,4 |  22 = 68,1  |  23 = 65,2
-                    if (count == 6) mark += ((300.0 / (double)maxLessons) * 10.0); //градация оценки при 19 = 157,8 | 20 =  150 |  21 =  142,8 |  22 = 136,3  |  23 = 130,4
+                    if (count == 5) mark += ((150.0 / (double)maxLessons) * 100.0); 
+                    if (count == 6) mark += ((300.0 / (double)maxLessons) * 100.0); 
                 }
             }
 
@@ -116,16 +116,16 @@ namespace Calendar
                 if (day.name == "Суббота")
                 {
                     if (count <= 3) mark += 0.0;// при большом числе предметов стоит уделить субботе меньшее их число
-                    if (count == 4) mark += ((70.0 / (double)maxLessons) * 10.0);
-                    if (count == 5) mark += ((110.0 / (double)maxLessons) * 10.0);
-                    if (count == 6) mark += ((800.0 / (double)maxLessons) * 10.0);
+                    if (count == 4) mark += ((70.0 / (double)maxLessons) * 2000.0);
+                    if (count == 5) mark += ((110.0 / (double)maxLessons) * 2000.0);
+                    if (count == 6) mark += ((800.0 / (double)maxLessons) * 2000.0);
 
                 }
                 else
                 {
                     if (count <= 4) mark += 0.0;//при большом числе предметов на неделе - 4 наилучший результат
-                    if (count == 5) mark += ((60.0 / (double)maxLessons) * 10.0); //градация оценки при 24 = 25 | 25 =  24   |  26 =  23 |  27 = 22,2 |  28 = 21,4
-                    if (count == 6) mark += ((250.0 / (double)maxLessons) * 10.0); //градация оценки при 24 = 104,1 | 25 =  100 |  26 =  96,1 |  27 = 92,5 |  28 = 89,2
+                    if (count == 5) mark += ((60.0 / (double)maxLessons) * 100.0); //градация оценки при 24 = 25 | 25 =  24   |  26 =  23 |  27 = 22,2 |  28 = 21,4
+                    if (count == 6) mark += ((250.0 / (double)maxLessons) * 100.0); //градация оценки при 24 = 104,1 | 25 =  100 |  26 =  96,1 |  27 = 92,5 |  28 = 89,2
                 }
             }
 
@@ -134,18 +134,18 @@ namespace Calendar
                 if (day.name == "Суббота")
                 {
                     if (count <= 4) mark += 0.0;// при крайне высокой нагрузке для субботы подойдет почти любое число предметов
-                    if (count == 5) mark += ((100.0 / (double)maxLessons) * 10.0);
+                    if (count == 5) mark += ((100.0 / (double)maxLessons) * 1000.0);
                     if (count == 6 && maxLessons < 34)
                     {
-                        mark += ((250.0 / (double)maxLessons) * 10.0);
+                        mark += ((250.0 / (double)maxLessons) * 100.0);
                     }
-                    if (count == 6 && maxLessons > 34) mark += ((40.0 / (double)maxLessons) * 10.0);
+                    if (count == 6 && maxLessons > 34) mark += ((40.0 / (double)maxLessons) * 100.0);
 
                 }
                 else
                 {
                     if (count <= 5) mark += 0.0;//при крайне высоком числе предметов на неделе - 5 наилучший результат
-                    if (count == 6) mark += ((100.0 / (double)maxLessons) * 10.0); //градация оценки при 29 = 34,5 | 30 =  33,3 |  31 =  32,2 |  32 = 31,25 |  33 = 30,3 ....
+                    if (count == 6) mark += ((100.0 / (double)maxLessons) * 100.0); //градация оценки при 29 = 34,5 | 30 =  33,3 |  31 =  32,2 |  32 = 31,25 |  33 = 30,3 ....
                 }
             }
 
@@ -159,6 +159,7 @@ namespace Calendar
             double mark = 0.0;
 
             int count = 0;//счетчик пар
+
             int lastIndex = Array.LastIndexOf(day.matrix, true);//позиция последней пары
             int window = 0;//счетчик окон
 
@@ -183,11 +184,11 @@ namespace Calendar
                 }
             }
 
-            if (window == 4) mark = 3000.0;
-            if (window == 3) mark = 1500.0;
-            if (window == 2) mark = 1000.0;
-            if (window == 1) mark = 300.0;
-            if (window == 0) mark = 0.0;
+            if (window == 4) mark += 90999989.0;
+            if (window == 3) mark += 60000087.0;
+            if (window == 2) mark += 40000078.0;
+            if (window == 1) mark += 10000000.0;
+            if (window == 0) mark += 0.0;
 
             return mark;
         }
@@ -241,7 +242,7 @@ namespace Calendar
                             if (lessons[i] == keyValue.Value) same++; else if (keyValue.Key != same) unSame++;
                         }
 
-                        if (unSame >= 1) mark += 653.1;//2 пары должны всегда стоять рядом
+                        if (unSame >= 1) mark += 659.1;//2 пары должны всегда стоять рядом
                         if (unSame == 0) mark += 0.0;
                     }
 
@@ -274,7 +275,7 @@ namespace Calendar
             {
                 if (keyValue.Value != "" && keyValue.Key > 1)//если поле не пустое и число повторений более одного:
                 {
-                    if (keyValue.Key == 6) mark += 2500.0;//6 пар подряд - крайне много и недопустимо для одного человека
+                    if (keyValue.Key == 6) mark += 7500.0;//6 пар подряд - крайне много и недопустимо для одного человека
                     if (keyValue.Key == 5) mark += 500.0;//5 пар - нежелательно для одного учителя, но допустимо
                     if (keyValue.Key <= 4) mark += 0;
 
@@ -314,7 +315,7 @@ namespace Calendar
                     if (lessons[i] != "") index = i;
                 }
 
-                if (indexFiz >= index) mark += 0.0; else mark += 997.63;//если физкультура найдена и стоит последней то отлично!, если нет, то штрафуем
+                if (indexFiz >= index) mark += 0.0; else mark += 990.63;//если физкультура найдена и стоит последней то отлично!, если нет, то штрафуем
             }
 
             return mark;
@@ -387,9 +388,9 @@ namespace Calendar
                             {
                                 check = false;//выходим из цикла, если найдено совпадение
                                 if (unicLessons[i].time >= 6) mark += 970.2;//слишком растратно проводить предмет 1 раз при высокой нагрузке
-                                if (unicLessons[i].time == 5) mark += 552.21;//1 раз слишком мало при таком числе раз
-                                if (unicLessons[i].time == 4) mark += 251.78;//нежелательно проводить предмет 1 раз при 4х
-                                if (unicLessons[i].time == 3) mark += 174.6;//проводить предмет при таком числе раз не слишком целесообразно
+                                if (unicLessons[i].time == 5) mark += 502.21;//1 раз слишком мало при таком числе раз
+                                if (unicLessons[i].time == 4) mark += 250.78;//нежелательно проводить предмет 1 раз при 4х
+                                if (unicLessons[i].time == 3) mark += 70.6;//проводить предмет при таком числе раз не слишком целесообразно
                                 if (unicLessons[i].time <= 2) mark += 0;//проводить предмет 1 раз из 2х или 1ого - лучший вариант
                             }
                             i++;
@@ -403,9 +404,9 @@ namespace Calendar
         }
 
         //Метод, возвращающий особь с посчитанными оценками хромосом, для замены содержимого ссылки в конструкторе класса
-        public Day[] InputMarks()
+        public Day[] InputMarksAndDays()
         {
-            return days;
+            return this.days;
         }
 
         //Подсчет итоговой оценки для особи
@@ -414,7 +415,7 @@ namespace Calendar
             double total = 0.0;
             for (int i = 0; i < 6; i++)
             {
-                total += days[i].mark;
+                total += this.days[i].mark;
             }
            
             // total += CommonMarksDays(); //хотелось бы добавить метод о распределенности предметов в расписании

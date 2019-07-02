@@ -49,9 +49,8 @@ namespace Calendar
             FirstPopulation();//формирование начальной популяции
             generator = new Generator(this);
 
-            //generator.GetPopulations(1000);//выведение новых поколений, аргумент - число популяций
             generator.GetPopulations(config.numGenerations);
-
+        
             render.Timers(timers, group);//отрисовка времени проведения занятий и номера группы
             render.GetList(generations);//заполнение листа поколениями
 
@@ -120,7 +119,8 @@ namespace Calendar
             Generations generic = new Generations("популяция #0");
             
             generic.mark = ratio.TotalMark();//считаем общую оценку особи
-            generic.Input(days);
+            generic.days = ratio.InputMarksAndDays();  
+
             generations.Add(new Generations(generic));
             firstmark = generic.mark;
             generic = null;
